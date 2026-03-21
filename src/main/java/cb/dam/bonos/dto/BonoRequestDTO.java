@@ -1,5 +1,6 @@
 package cb.dam.bonos.dto;
 
+import cb.dam.bonos.model.BonoEstado;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class BonoRequestDTO {
     @NotBlank
     private LocalDate fechaVencimiento;
 
-
+    @NotBlank
+    private BonoEstado estado;
 
 }

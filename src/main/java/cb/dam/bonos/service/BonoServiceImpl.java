@@ -65,8 +65,7 @@ public class BonoServiceImpl implements BonoService{
         bono.setPrecio(dto.getPrecio());
         bono.setFechaCompra(dto.getFechaCompra());
         bono.setFechaVencimiento(dto.getFechaVencimiento());
-
-
+        bono.setEstado(dto.getEstado());
 
         return mapToDTO(bonoRepository.save(bono));
     }
@@ -109,7 +108,7 @@ public class BonoServiceImpl implements BonoService{
                 .precio(bono.getPrecio())
                 .fechaCompra(bono.getFechaCompra())
                 .fechaVencimiento(bono.getFechaVencimiento())
-                .estado(bono.getEstado().name())
+                .estado(bono.getEstado())
                 .creador(bono.getCreator().getUsername())
                 .build();
     }

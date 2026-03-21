@@ -1,5 +1,6 @@
 package cb.dam.bonos.dto;
 
+import cb.dam.bonos.model.BonoEstado;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,6 +17,6 @@ public class BonoResponseDTO {
     private BigDecimal precio;
     private LocalDate fechaCompra;
     private LocalDate fechaVencimiento;
-    private String estado;
+    private BonoEstado estado;
     private String creador;
 }
