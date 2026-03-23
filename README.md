@@ -20,6 +20,17 @@ Este proyecto ha sido desarrollado como parte de mi portfolio para demostrar com
 
 ---
 
+## 🖥️ Tecnologías
+
+* Java 21
+* Spring Boot
+* Spring Security
+* Spring Data JPA (Hibernate)
+* PostgreSQl
+* Maven
+
+---
+
 ## 🏗️ Arquitectura
 
 El proyecto sigue el patrón **MVC + Service Layer**:
@@ -51,7 +62,8 @@ Implementación basada en **Spring Security + JWT**:
 ### 🔑 Autenticación
 
 ```http
-POST /auth/login
+POST /api/auth/signup → registro
+POST /auth/login      → login (devuelve JWT)
 ```
 
 ### 🎟️ Bonos
@@ -65,8 +77,26 @@ DELETE /bonos/{id}     → eliminar
 ```
 
 ---
+## 🔄 Flujo de creación de bono
+```text
+RequestDTO → Controller → Service → Entity → DB → ResponseDTO
+```
+* El usuario se obtiene del JWT
+* El backend asigna el creador
+* El estado se controla desde la lógica de negocio
+---
 
-## 📦 Ejemplo JSON
+## 🧾 Estados del bono
+```text
+ACTIVO → USADO
+ACTIVO → VENCIDO (futuro: automático)
+```
+
+* Validación de transiciones en backend
+* Uso de enum para consistencia
+
+---
+## 📦 Ejemplo requet JSON
 
 ```json
 {
@@ -80,15 +110,17 @@ DELETE /bonos/{id}     → eliminar
 ```
 
 ---
-
-## 🖥️ Tecnologías
-
-* Java 21
-* Spring Boot
-* Spring Security
-* Spring Data JPA (Hibernate)
-* PostgreSQl
-* Maven
+## 📤 Ejemplo response
+```json
+{
+"id": 1,
+"servicio": "Radiofrecuencia",
+"comprador": "Maria",
+"precio": 120,
+"estado": "ACTIVO",
+"creador": "christian"
+}
+```
 
 ---
 
@@ -111,6 +143,17 @@ Ejecutar:
 
 ```bash
 mvn spring-boot:run
+```
+---
+## ❌ Manejo de errores
+
+Centralizado mediante @RestControllerAdvice
+
+Ejemplo:
+```json
+{
+"message": "Bono no encontrado"
+}
 ```
 
 ---
