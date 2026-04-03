@@ -22,3 +22,15 @@ export async function crearBono() {
 
     cargarBonos();
 }
+
+
+export async function actualizarBono(id) {
+    const servicio = document.querySelector('#servicio').value;
+
+    await fetchConAuth(`${API_URL}/bonos/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ servicio })
+    });
+
+    cargarBonos();
+}

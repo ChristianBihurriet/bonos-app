@@ -45,3 +45,15 @@ export function renderCrearBono() {
     document.querySelector('#guardarBtn').addEventListener('click', crearBono);
     document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
 }
+
+export async function renderEditarBono(id) {
+    const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
+
+    document.querySelector('#app').innerHTML = `
+    <input id="servicio" value="${bono.servicio}" />
+    <button id="guardarBtn">Guardar</button>
+  `;
+
+    document.querySelector('#guardarBtn')
+        .addEventListener('click', () => actualizarBono(id));
+}
