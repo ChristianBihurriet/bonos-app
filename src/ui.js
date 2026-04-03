@@ -1,6 +1,12 @@
 import { login, logout } from "./auth.js";
-import { crearBono, cargarBonos, actualizarBono } from "./bonos.js";
 import { fetchConAuth, API_URL } from "./api.js";
+import {
+    crearBono,
+    cargarBonos,
+    actualizarBono,
+    eliminarBono,
+    marcarComoUsado
+} from "./bonos.js";
 
 export function renderLogin() {
     document.querySelector('#app').innerHTML = `
@@ -104,13 +110,15 @@ export function renderBonos(bonos) {
     document.querySelector('#logoutBtn').addEventListener('click', logout);
 
     document.querySelectorAll('.accion-select').forEach(select => {
-        select.addEventListener('change', (e) => {
+        select.addEventListener('change', async (e) => {
             const id = e.target.dataset.id;
             const accion = e.target.value;
 
             if (accion === "editar") renderEditarBono(id);
-            if (accion === "usar") marcarComoUsado(id);
-            if (accion === "eliminar") eliminarBono(id);
+            if (accion === "usar") await marcarComoUsado(id);
+            if (accion === "eliminar") await eliminarBono(id);
+
+            e.target.value = "";
         });
     });
 }

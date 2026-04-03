@@ -3,7 +3,7 @@ import { renderBonos } from "./ui.js";
 
 export async function cargarBonos() {
     const data = await fetchConAuth(`${API_URL}/bonos`);
-    renderBonos(data);
+    renderBonos(data || []);
 }
 
 export async function crearBono() {

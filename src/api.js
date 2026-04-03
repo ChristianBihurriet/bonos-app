@@ -26,5 +26,11 @@ export async function fetchConAuth(url, options = {}) {
         throw new Error("Error en request");
     }
 
-    return response.json();
+    // 🔥 CLAVE: leer como texto primero
+    const text = await response.text();
+
+    // si no hay body → devolvemos null
+    if (!text) return null;
+
+    return JSON.parse(text);
 }
