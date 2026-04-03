@@ -1,4 +1,3 @@
-// main.js
 import { renderLogin } from "./ui.js";
 import { cargarBonos } from "./bonos.js";
 

@@ -1,4 +1,5 @@
 import { API_URL, fetchConAuth } from "./api.js";
+import { renderBonos } from "./ui.js";
 
 export async function cargarBonos() {
     const data = await fetchConAuth(`${API_URL}/bonos`);

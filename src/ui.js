@@ -1,3 +1,7 @@
+import { login, logout } from "./auth.js";
+import { crearBono, cargarBonos, actualizarBono } from "./bonos.js";
+import { fetchConAuth, API_URL } from "./api.js";
+
 export function renderLogin() {
     document.querySelector('#app').innerHTML = `
     <h1>Login</h1>
