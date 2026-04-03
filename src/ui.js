@@ -4,11 +4,32 @@ import { fetchConAuth, API_URL } from "./api.js";
 
 export function renderLogin() {
     document.querySelector('#app').innerHTML = `
-    <h1>Login</h1>
-    <input id="username" placeholder="Usuario" />
-    <input id="password" type="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
-    <div id="resultado"></div>
+    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
+
+      <h1 class="fw-bold mb-5 text-center" style="font-size: 3rem;">
+        Bienvenido al sistema gestor de bonos
+      </h1>
+
+      <div class="card shadow p-4" style="width: 400px; border-radius: 10px;">
+
+        <div class="mb-3">
+          <label class="form-label">Usuario</label>
+          <input id="username" class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Contraseña</label>
+          <input id="password" type="password" class="form-control">
+        </div>
+
+        <button id="loginBtn" class="btn btn-dark w-100 mt-2">
+          Entrar
+        </button>
+
+        <div id="resultado" class="text-danger mt-3 text-center"></div>
+
+      </div>
+    </div>
   `;
 
     document.querySelector('#loginBtn').addEventListener('click', login);

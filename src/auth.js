@@ -1,3 +1,6 @@
+import { cargarBonos } from "./bonos.js";
+import { renderLogin } from "./ui.js";
+
 export async function login() {
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
@@ -24,7 +27,7 @@ export async function login() {
 
         localStorage.setItem("token", data.token);
 
-        init(); // recargar app
+        cargarBonos();
 
     } catch (error) {
         document.querySelector('#resultado').innerText = error.message;
