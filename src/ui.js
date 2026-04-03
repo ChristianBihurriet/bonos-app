@@ -192,12 +192,62 @@ export async function renderEditarBono(id) {
     const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
 
     document.querySelector('#app').innerHTML = `
-    <input id="servicio" value="${bono.servicio}" />
-    <button id="guardarBtn">Guardar</button>
+    <div class="container mt-5">
+
+      <h3 class="text-center mb-4">Editar bono</h3>
+
+      <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
+
+        <div class="mb-3">
+          <label class="form-label">Servicio</label>
+          <input id="servicio" class="form-control" value="${bono.servicio}" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Comprador</label>
+          <input id="comprador" class="form-control" value="${bono.comprador}" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha de compra</label>
+          <input id="fechaCompra" type="date" class="form-control" value="${bono.fechaCompra?.split("T")[0]}" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha de vencimiento</label>
+          <input id="fechaVencimiento" type="date" class="form-control" value="${bono.fechaVencimiento?.split("T")[0]}" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Estado</label>
+          <select id="estado" class="form-select">
+            <option value="ACTIVO" ${bono.estado === "ACTIVO" ? "selected" : ""}>ACTIVO</option>
+            <option value="USADO" ${bono.estado === "USADO" ? "selected" : ""}>USADO</option>
+            <option value="VENCIDO" ${bono.estado === "VENCIDO" ? "selected" : ""}>VENCIDO</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Monto (€)</label>
+          <input id="precio" type="number" class="form-control" value="${bono.precio}" />
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button id="volverBtn" class="btn btn-outline-dark">Volver</button>
+          <button id="guardarBtn" class="btn btn-dark">Guardar cambios</button>
+        </div>
+
+        <div id="resultado" class="text-danger mt-3 text-end"></div>
+
+      </div>
+    </div>
   `;
 
     document.querySelector('#guardarBtn')
         .addEventListener('click', () => actualizarBono(id));
+
+    document.querySelector('#volverBtn')
+        .addEventListener('click', cargarBonos);
 }
 
 function getEstadoClass(estado) {

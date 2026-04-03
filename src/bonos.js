@@ -37,10 +37,22 @@ export async function crearBono() {
 
 export async function actualizarBono(id) {
     const servicio = document.querySelector('#servicio').value;
+    const comprador = document.querySelector('#comprador').value;
+    const precio = document.querySelector('#precio').value;
+    const fechaCompra = document.querySelector('#fechaCompra').value;
+    const fechaVencimiento = document.querySelector('#fechaVencimiento').value;
+    const estado = document.querySelector('#estado').value;
 
     await fetchConAuth(`${API_URL}/bonos/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ servicio })
+        body: JSON.stringify({
+            servicio,
+            comprador,
+            precio,
+            fechaCompra,
+            fechaVencimiento,
+            estado
+        })
     });
 
     cargarBonos();
