@@ -37,20 +37,76 @@ export function renderLogin() {
 
 export function renderBonos(bonos) {
     document.querySelector('#app').innerHTML = `
-    <h1>Sistema de bonos</h1>
-    <button id="logoutBtn">Logout</button>
+    <div class="container mt-5">
 
-    <table>
-      ${bonos.map(b => `
-        <tr>
-          <td>${b.servicio}</td>
-          <td>${b.comprador}</td>
-        </tr>
-      `).join("")}
-    </table>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Sistema de bonos</h2>
+        <button id="logoutBtn" class="btn btn-outline-dark">Logout</button>
+      </div>
+
+      <div class="card shadow-sm p-3">
+
+        <div class="mb-3">
+          <input class="form-control w-25" placeholder="Buscar..." />
+        </div>
+
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Servicio</th>
+              <th>Comprador</th>
+              <th>Fecha compra</th>
+              <th>Vencimiento</th>
+              <th>Estado</th>
+              <th>Precio</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${bonos.map(b => `
+              <tr>
+                <td>${b.id}</td>
+                <td>${b.servicio}</td>
+                <td>${b.comprador}</td>
+                <td>${b.fechaCompra}</td>
+                <td>${b.fechaVencimiento}</td>
+                <td>
+                  <span class="badge ${getEstadoClass(b.estado)}">
+                    ${b.estado}
+                  </span>
+                </td>
+                <td>${b.precio}</td>
+                <td>
+                  <select class="form-select form-select-sm accion-select" data-id="${b.id}">
+                    <option value="">Acciones</option>
+                    <option value="editar">Editar</option>
+                    <option value="usar">Marcar usado</option>
+                    <option value="eliminar">Eliminar</option>
+                  </select>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
   `;
 
     document.querySelector('#logoutBtn').addEventListener('click', logout);
+
+    document.querySelectorAll('.accion-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const id = e.target.dataset.id;
+            const accion = e.target.value;
+
+            if (accion === "editar") renderEditarBono(id);
+            if (accion === "usar") marcarComoUsado(id);
+            if (accion === "eliminar") eliminarBono(id);
+        });
+    });
 }
 
 export function renderCrearBono() {
@@ -81,4 +137,10 @@ export async function renderEditarBono(id) {
 
     document.querySelector('#guardarBtn')
         .addEventListener('click', () => actualizarBono(id));
+}
+
+function getEstadoClass(estado) {
+    if (estado === "ACTIVO") return "bg-success";
+    if (estado === "USADO") return "bg-secondary";
+    if (estado === "VENCIDO") return "bg-danger";
 }
