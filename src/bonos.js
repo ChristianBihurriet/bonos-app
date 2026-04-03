@@ -34,3 +34,24 @@ export async function actualizarBono(id) {
 
     cargarBonos();
 }
+
+function handleAccion(id, accion) {
+    if (accion === "eliminar") eliminarBono(id);
+    if (accion === "usar") marcarComoUsado(id);
+}
+
+export async function eliminarBono(id) {
+    await fetchConAuth(`${API_URL}/bonos/${id}`, {
+        method: "DELETE"
+    });
+
+    cargarBonos();
+}
+
+export async function marcarComoUsado(id) {
+    await fetchConAuth(`${API_URL}/bonos/${id}/usar`, {
+        method: "PATCH"
+    });
+
+    cargarBonos();
+}
