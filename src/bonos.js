@@ -10,15 +10,25 @@ export async function crearBono() {
     const servicio = document.querySelector('#servicio').value;
     const comprador = document.querySelector('#comprador').value;
     const precio = document.querySelector('#precio').value;
+    const fechaCompra = document.querySelector('#fechaCompra').value;
+    const fechaVencimiento = document.querySelector('#fechaVencimiento').value;
+    const estado = document.querySelector('#estado').value;
 
-    if (!servicio || !comprador || !precio) {
-        document.querySelector('#resultado').innerText = "Completa campos";
+    if (!servicio || !comprador || !precio || !fechaCompra || !fechaVencimiento || !estado) {
+        document.querySelector('#resultado').innerText = "Completa todos los campos";
         return;
     }
 
     await fetchConAuth(`${API_URL}/bonos`, {
         method: "POST",
-        body: JSON.stringify({ servicio, comprador, precio })
+        body: JSON.stringify({
+            servicio,
+            comprador,
+            precio,
+            fechaCompra,
+            fechaVencimiento,
+            estado
+        })
     });
 
     cargarBonos();

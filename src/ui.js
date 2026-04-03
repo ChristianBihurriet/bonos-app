@@ -40,9 +40,13 @@ export function renderBonos(bonos) {
     <div class="container mt-5">
 
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">Sistema de bonos</h2>
-        <button id="logoutBtn" class="btn btn-outline-dark">Logout</button>
-      </div>
+  <h2 class="fw-bold">Sistema de bonos</h2>
+
+  <div class="d-flex gap-2">
+    <button id="crearBtn" class="btn btn-dark">Agregar bono</button>
+    <button id="logoutBtn" class="btn btn-outline-dark">Logout</button>
+  </div>
+</div>
 
       <div class="card shadow-sm p-3">
 
@@ -95,6 +99,8 @@ export function renderBonos(bonos) {
     </div>
   `;
 
+    document.querySelector('#crearBtn').addEventListener('click', renderCrearBono);
+
     document.querySelector('#logoutBtn').addEventListener('click', logout);
 
     document.querySelectorAll('.accion-select').forEach(select => {
@@ -111,17 +117,64 @@ export function renderBonos(bonos) {
 
 export function renderCrearBono() {
     document.querySelector('#app').innerHTML = `
-    <h1>Crear Bono</h1>
+    <div class="container mt-5">
 
-    <input id="servicio" placeholder="Servicio" />
-    <input id="comprador" placeholder="Comprador" />
-    <input id="precio" type="number" />
+      <h3 class="text-center mb-4">Crear bono</h3>
 
-    <button id="guardarBtn">Guardar</button>
-    <button id="volverBtn">Volver</button>
+      <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
 
-    <div id="resultado"></div>
+        <div class="mb-3">
+          <label class="form-label">Servicio</label>
+          <input id="servicio" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Comprador</label>
+          <input id="comprador" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha de compra</label>
+          <input id="fechaCompra" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha de vencimiento</label>
+          <input id="fechaVencimiento" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Estado</label>
+          <select id="estado" class="form-select">
+            <option value="ACTIVO">ACTIVO</option>
+            <option value="USADO">USADO</option>
+            <option value="VENCIDO">VENCIDO</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Monto (€)</label>
+          <input id="precio" type="number" class="form-control" />
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button id="volverBtn" class="btn btn-outline-dark">Volver</button>
+          <button id="guardarBtn" class="btn btn-dark">Agregar</button>
+        </div>
+
+        <div id="resultado" class="text-danger mt-3 text-end"></div>
+
+      </div>
+    </div>
   `;
+
+    // defaults
+    const hoy = new Date();
+    document.querySelector('#fechaCompra').value = hoy.toISOString().split('T')[0];
+
+    const vencimiento = new Date(hoy);
+    vencimiento.setMonth(vencimiento.getMonth() + 6);
+    document.querySelector('#fechaVencimiento').value = vencimiento.toISOString().split('T')[0];
 
     document.querySelector('#guardarBtn').addEventListener('click', crearBono);
     document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
