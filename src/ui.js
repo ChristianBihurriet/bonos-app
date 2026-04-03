@@ -27,3 +27,21 @@ export function renderBonos(bonos) {
 
     document.querySelector('#logoutBtn').addEventListener('click', logout);
 }
+
+export function renderCrearBono() {
+    document.querySelector('#app').innerHTML = `
+    <h1>Crear Bono</h1>
+
+    <input id="servicio" placeholder="Servicio" />
+    <input id="comprador" placeholder="Comprador" />
+    <input id="precio" type="number" />
+
+    <button id="guardarBtn">Guardar</button>
+    <button id="volverBtn">Volver</button>
+
+    <div id="resultado"></div>
+  `;
+
+    document.querySelector('#guardarBtn').addEventListener('click', crearBono);
+    document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
+}
