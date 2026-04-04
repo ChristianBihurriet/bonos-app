@@ -1,20 +1,46 @@
+# ======================
 # Java / Maven
+# ======================
 backend/target/
 backend/.mvn/
 backend/*.log
+backend/.classpath
+backend/.project
+backend/.settings/
 
-# Node
+# ======================
+# Node / Frontend
+# ======================
 frontend/node_modules/
 frontend/dist/
+frontend/.vite/
+frontend/*.log
 
+# ======================
 # OS
+# ======================
 .DS_Store
 Thumbs.db
 
+# ======================
 # IDEs
+# ======================
 .idea/
 .vscode/
 *.iml
 
-# env
+# ======================
+# Env / secretos
+# ======================
 .env
+*.env
+
+# ======================
+# Logs generales
+# ======================
+*.log
+
+# ======================
+# Otros
+# ======================
+coverage/
