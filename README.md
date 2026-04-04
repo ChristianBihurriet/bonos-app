@@ -12,6 +12,7 @@ _(Próximamente / levantar con Docker)_
 
 ---
 
+
 ## 🧠 Características principales
 
 - ✅ CRUD completo de bonos  
@@ -75,35 +76,39 @@ bonos-app/
 ```
 
 ## ⚙️ Instalación y ejecución
+
 ### 🔥 Opción recomendada: Docker
 
 ```
 git clone https://github.com/ChristianBihurriet/bonos-app.git
 cd bonos-app
 docker compose up --build
-```    
-Frontend: http://localhost:3000
+```  
+#### Accesos
 
-Backend: http://localhost:8080
+- Frontend → http://localhost:3000
+- Backend → http://localhost:8080
+- Swagger → http://localhost:8080/swagger-ui.html
 
 ---
+### 🔐 Usuario de prueba
+```
+username: christian
 
-### 🛠️ Ejecución manual
+password: 123456
+```
+---
+### 📦 Datos iniciales
 
-#### Backend:
-```
-cd backend
-mvn spring-boot:run
-```
-Acceder →  http://localhost:8080
+El proyecto incluye un `data.sql` que carga automáticamente:
 
-#### Frontend:
-```
-cd frontend
-npm install
-npm run dev
-```
-Acceder → http://localhost:5173
+- 👤 1 usuario
+  - 🎟️ +15 bonos con distintos estados:
+    - ACTIVO
+    - USADO
+    - VENCIDO
+---
+
 
 ## 📡 Endpoints principales
 
@@ -125,15 +130,12 @@ Acceder → http://localhost:5173
 | POST   | /bonos        | Crear un nuevo bono             |
 | PUT    | /bonos/{id}   | Actualizar un bono              |
 | DELETE | /bonos/{id}   | Eliminar un bono                |
+
 ## 🔄 Flujo de funcionamiento
 
 ```text
 Login → JWT → Requests autenticados → Backend → DB → Respuesta → UI
 ```
-
-## 🧾 Estados del bono
-ACTIVO → USADO  
-ACTIVO → VENCIDO (Funcionalidad futura)
 
 ## ⚠️ Notas técnicas
 
@@ -149,6 +151,16 @@ Si el backend está corriendo, puedes acceder a la interfaz de Swagger en:
 👉 http://localhost:8080/swagger-ui.html
 
 ---
+## 📸 Screenshots
+
+### 🔐 Login
+![Login](docs/images/login.png)
+
+### 🎟️ Bonos
+![Bonos](docs/images/bonos.png)
+
+### 📊 Swagger
+![Swagger](docs/images/swagger.png)
 
 ## 📈 Mejoras futuras
 
