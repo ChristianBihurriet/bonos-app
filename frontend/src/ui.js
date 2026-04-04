@@ -5,7 +5,8 @@ import {
   cargarBonos,
   actualizarBono,
   eliminarBono,
-  marcarComoUsado
+  marcarComoUsado,
+  buscarBonoPorId
 } from "./bonos.js";
 
 export function renderLogin() {
@@ -60,7 +61,11 @@ export function renderBonos(bonos) {
       <div class="card shadow-sm p-3">
 
         <div class="mb-3">
-          <input class="form-control w-25" placeholder="Buscar..." />
+          <form id="buscarForm" class="mb-3 d-flex gap-2">
+  <input id="buscarId" type="number" class="form-control w-25" placeholder="Buscar por ID..." />
+  <button type="submit" class="btn btn-dark">Buscar</button>
+  <button type="button" id="resetBtn" class="btn btn-outline-secondary">Reset</button>
+</form>
         </div>
 
         <table class="table table-hover align-middle">
@@ -124,6 +129,23 @@ export function renderBonos(bonos) {
       e.target.value = "";
     });
   });
+
+  document.querySelector('#buscarForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.querySelector('#buscarId').value;
+
+    if (!id) return;
+
+    if (Number(id) <= 0) {
+      alert("El ID debe ser mayor que 0");
+      return;
+    }
+
+    await buscarBonoPorId(id);
+  });
+
+  document.querySelector('#resetBtn').addEventListener('click', cargarBonos);
 }
 
 export function renderCrearBono() {

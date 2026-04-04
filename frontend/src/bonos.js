@@ -78,3 +78,15 @@ export async function marcarComoUsado(id) {
 
     cargarBonos();
 }
+
+export async function buscarBonoPorId(id) {
+    try {
+        const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
+
+        // renderizamos como lista de 1 elemento
+        renderBonos([bono]);
+
+    } catch (error) {
+        alert("Bono no encontrado");
+    }
+}
