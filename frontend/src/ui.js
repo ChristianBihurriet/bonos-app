@@ -1,22 +1,22 @@
 import { login, logout } from "./auth.js";
 import { fetchConAuth, API_URL } from "./api.js";
 import {
-    crearBono,
-    cargarBonos,
-    actualizarBono,
-    eliminarBono,
-    marcarComoUsado
+  crearBono,
+  cargarBonos,
+  actualizarBono,
+  eliminarBono,
+  marcarComoUsado
 } from "./bonos.js";
 
 export function renderLogin() {
-    document.querySelector('#app').innerHTML = `
+  document.querySelector('#app').innerHTML = `
     <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
 
       <h1 class="fw-bold mb-5 text-center" style="font-size: 3rem;">
         Bienvenido al sistema gestor de bonos
       </h1>
 
-      <div class="card shadow p-4" style="width: 400px; border-radius: 10px;">
+      <form id="loginForm" class="card shadow p-4" style="width: 400px; border-radius: 10px;">
 
         <div class="mb-3">
           <label class="form-label">Usuario</label>
@@ -28,21 +28,24 @@ export function renderLogin() {
           <input id="password" type="password" class="form-control">
         </div>
 
-        <button id="loginBtn" class="btn btn-dark w-100 mt-2">
+        <button type="submit" class="btn btn-dark w-100 mt-2">
           Entrar
         </button>
 
         <div id="resultado" class="text-danger mt-3 text-center"></div>
 
-      </div>
+      </form>
     </div>
   `;
 
-    document.querySelector('#loginBtn').addEventListener('click', login);
+  document.querySelector('#loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    login();
+  });
 }
 
 export function renderBonos(bonos) {
-    document.querySelector('#app').innerHTML = `
+  document.querySelector('#app').innerHTML = `
     <div class="container mt-5">
 
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -105,26 +108,26 @@ export function renderBonos(bonos) {
     </div>
   `;
 
-    document.querySelector('#crearBtn').addEventListener('click', renderCrearBono);
+  document.querySelector('#crearBtn').addEventListener('click', renderCrearBono);
 
-    document.querySelector('#logoutBtn').addEventListener('click', logout);
+  document.querySelector('#logoutBtn').addEventListener('click', logout);
 
-    document.querySelectorAll('.accion-select').forEach(select => {
-        select.addEventListener('change', async (e) => {
-            const id = e.target.dataset.id;
-            const accion = e.target.value;
+  document.querySelectorAll('.accion-select').forEach(select => {
+    select.addEventListener('change', async (e) => {
+      const id = e.target.dataset.id;
+      const accion = e.target.value;
 
-            if (accion === "editar") renderEditarBono(id);
-            if (accion === "usar") await marcarComoUsado(id);
-            if (accion === "eliminar") await eliminarBono(id);
+      if (accion === "editar") renderEditarBono(id);
+      if (accion === "usar") await marcarComoUsado(id);
+      if (accion === "eliminar") await eliminarBono(id);
 
-            e.target.value = "";
-        });
+      e.target.value = "";
     });
+  });
 }
 
 export function renderCrearBono() {
-    document.querySelector('#app').innerHTML = `
+  document.querySelector('#app').innerHTML = `
     <div class="container mt-5">
 
       <h3 class="text-center mb-4">Crear bono</h3>
@@ -176,22 +179,22 @@ export function renderCrearBono() {
     </div>
   `;
 
-    // defaults
-    const hoy = new Date();
-    document.querySelector('#fechaCompra').value = hoy.toISOString().split('T')[0];
+  // defaults
+  const hoy = new Date();
+  document.querySelector('#fechaCompra').value = hoy.toISOString().split('T')[0];
 
-    const vencimiento = new Date(hoy);
-    vencimiento.setMonth(vencimiento.getMonth() + 6);
-    document.querySelector('#fechaVencimiento').value = vencimiento.toISOString().split('T')[0];
+  const vencimiento = new Date(hoy);
+  vencimiento.setMonth(vencimiento.getMonth() + 6);
+  document.querySelector('#fechaVencimiento').value = vencimiento.toISOString().split('T')[0];
 
-    document.querySelector('#guardarBtn').addEventListener('click', crearBono);
-    document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
+  document.querySelector('#guardarBtn').addEventListener('click', crearBono);
+  document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
 }
 
 export async function renderEditarBono(id) {
-    const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
+  const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
 
-    document.querySelector('#app').innerHTML = `
+  document.querySelector('#app').innerHTML = `
     <div class="container mt-5">
 
       <h3 class="text-center mb-4">Editar bono</h3>
@@ -243,15 +246,15 @@ export async function renderEditarBono(id) {
     </div>
   `;
 
-    document.querySelector('#guardarBtn')
-        .addEventListener('click', () => actualizarBono(id));
+  document.querySelector('#guardarBtn')
+    .addEventListener('click', () => actualizarBono(id));
 
-    document.querySelector('#volverBtn')
-        .addEventListener('click', cargarBonos);
+  document.querySelector('#volverBtn')
+    .addEventListener('click', cargarBonos);
 }
 
 function getEstadoClass(estado) {
-    if (estado === "ACTIVO") return "bg-success";
-    if (estado === "USADO") return "bg-secondary";
-    if (estado === "VENCIDO") return "bg-danger";
+  if (estado === "ACTIVO") return "bg-success";
+  if (estado === "USADO") return "bg-secondary";
+  if (estado === "VENCIDO") return "bg-danger";
 }
