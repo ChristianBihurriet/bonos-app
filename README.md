@@ -1,6 +1,11 @@
 # 🎟️ Bonos API
 
-API REST para la gestión de bonos de servicios (ej. estética), con autenticación JWT, validación de datos y arquitectura profesional basada en Spring Boot. 
+API REST para la gestión de bonos de servicios (ej. estética), con autenticación JWT, validación de datos y arquitectura profesional basada en Spring Boot.
+
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-brightgreen)
+![Security](https://img.shields.io/badge/Security-JWT-orange)
+![Build](https://img.shields.io/badge/build-passing-success)
 
 ---
 # 🧠 Proyecto de portfolio
