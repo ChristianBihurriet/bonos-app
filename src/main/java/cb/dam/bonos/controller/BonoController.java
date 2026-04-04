@@ -7,6 +7,7 @@ import cb.dam.bonos.model.User;
 import cb.dam.bonos.service.BonoService;
 import cb.dam.bonos.service.BonoServiceImpl;
 import cb.dam.bonos.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/bonos")
 @RequiredArgsConstructor
