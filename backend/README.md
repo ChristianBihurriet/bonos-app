@@ -165,10 +165,31 @@ Ejemplo:
 
 ## 🧪 Testing
 
-* Actualmente en desarrollo.  
-  Se implementarán tests unitarios con JUnit y Mockito.
+El backend incluye tests unitarios e integración.
 
----
+### 🔹 Tipos de tests
+
+- **Integración**
+  - SpringBootTest + MockMvc
+  - Endpoints reales
+  - Seguridad JWT incluida
+  - Base de datos H2 en memoria (`application-test`)
+
+- **Unitarios**
+  - Mockito
+  - Lógica de negocio aislada (Service)
+
+### 🔹 Configuración
+
+Los tests utilizan el perfil `test`, con una base de datos H2 que se crea y destruye automáticamente en cada ejecución.
+
+Esto permite ejecutar los tests sin necesidad de levantar Docker o PostgreSQL.
+
+### ▶️ Ejecutar
+
+```bash
+mvn test
+````
 
 ## 📄 Documentación API
 

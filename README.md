@@ -79,7 +79,7 @@ bonos-app/
 
 ### 🔥 Opción recomendada: Docker
 
-```
+```bash
 git clone https://github.com/ChristianBihurriet/bonos-app.git
 cd bonos-app
 docker compose up --build
@@ -150,6 +150,29 @@ Si el backend está corriendo, puedes acceder a la interfaz de Swagger en:
 
 👉 http://localhost:8080/swagger-ui.html
 
+---
+## 🧪 Testing
+
+El proyecto incluye distintos niveles de testing:
+
+- **Tests de integración**
+  - Uso de MockMvc para probar endpoints reales
+  - Seguridad JWT incluida
+  - Base de datos H2 en memoria
+
+- **Tests unitarios**
+  - Lógica de negocio aislada (Service)
+  - Uso de Mockito para simular repositorios
+
+- **Configuración de entorno**
+  - Perfil `test` con base de datos en memoria
+  - Tests independientes de Docker/PostgreSQL
+
+### ▶️ Para ejecutar los test:
+```bash
+cd backend
+mvn test
+```
 ---
 ## 📸 Screenshots
 
