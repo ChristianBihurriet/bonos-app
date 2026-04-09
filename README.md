@@ -90,6 +90,20 @@ docker compose up --build
 - Backend → http://localhost:8080
 - Swagger → http://localhost:8080/swagger-ui.html
 
+#### ⚙️ Personalizar puertos y variables (opcional)
+
+Si tienes puertos ocupados, crea un `.env` en la raíz (puedes copiar `.env.example`) y ajusta los valores:
+
+```bash
+cp .env.example .env
+```
+
+Variables disponibles:
+- `BACKEND_PORT` (default `8080`)
+- `FRONTEND_PORT` (default `3000`)
+- `DB_USER`, `DB_PASSWORD`, `DB_INTERNAL_PORT`
+- `VITE_API_URL` (si cambias `BACKEND_PORT`, ajusta también esta URL)
+
 ---
 ### 🔐 Usuario de prueba
 ```
