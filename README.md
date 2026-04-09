@@ -102,9 +102,9 @@ Variables disponibles:
 - `BACKEND_PORT` (default `8080`)
 - `FRONTEND_PORT` (default `3000`)
 - `DB_USER`, `DB_PASSWORD`, `DB_INTERNAL_PORT`
-- `VITE_API_URL` (si cambias `BACKEND_PORT`, ajusta también esta URL)
+- `VITE_API_URL` (si cambias `BACKEND_PORT`, ajústala también; acepta `http://localhost:8080` o `http://localhost:8080/api`)
+- `CORS_ALLOWED_ORIGINS` (opcional, lista separada por coma). Por defecto se calcula con `FRONTEND_PORT` en Docker Compose.
 
----
 ### 🔐 Usuario de prueba
 ```
 username: christian
