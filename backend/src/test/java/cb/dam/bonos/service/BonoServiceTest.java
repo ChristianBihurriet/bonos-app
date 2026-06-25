@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -81,13 +82,14 @@ class BonoServiceImplTest {
         User user = crearUser();
         Bono bono = crearBono(user);
 
-        when(bonoRepository.findAll()).thenReturn(List.of(bono));
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        when(bonoRepository.findAll(sortById)).thenReturn(List.of(bono));
 
         var result = bonoService.obtenerBonos();
 
         assertEquals(1, result.size());
         assertEquals("Facial", result.get(0).getServicio());
-        verify(bonoRepository).findAll();
+        verify(bonoRepository).findAll(sortById);
     }
 
     @Test

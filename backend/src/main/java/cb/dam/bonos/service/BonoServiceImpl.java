@@ -7,6 +7,7 @@ import cb.dam.bonos.model.BonoEstado;
 import cb.dam.bonos.model.User;
 import cb.dam.bonos.repository.BonoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class BonoServiceImpl implements BonoService{
     @Override
     public List<BonoResponseDTO> obtenerBonos() {
 
-        return bonoRepository.findAll()
+        return bonoRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
