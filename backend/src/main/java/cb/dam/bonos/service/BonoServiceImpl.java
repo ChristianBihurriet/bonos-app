@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,10 +24,13 @@ public class BonoServiceImpl implements BonoService{
         Bono bono = Bono.builder()
                 .servicio(dto.getServicio())
                 .comprador(dto.getComprador())
+                .beneficiario(dto.getBeneficiario())
                 .precio(dto.getPrecio())
-                .fechaCompra(dto.getFechaCompra())
-                .fechaVencimiento(dto.getFechaVencimiento())
-                .estado(BonoEstado.ACTIVO)
+                .fechaCompra(resolveFechaCompra(dto))
+                .fechaVencimiento(resolveFechaVencimiento(dto))
+                .formaPago(dto.getFormaPago())
+                .estado(dto.getEstado() != null ? dto.getEstado() : BonoEstado.ACTIVO)
+                .observaciones(dto.getObservaciones())
                 .creator(user)
                 .build();
 
@@ -63,10 +67,13 @@ public class BonoServiceImpl implements BonoService{
 
         bono.setServicio(dto.getServicio());
         bono.setComprador(dto.getComprador());
+        bono.setBeneficiario(dto.getBeneficiario());
         bono.setPrecio(dto.getPrecio());
         bono.setFechaCompra(dto.getFechaCompra());
         bono.setFechaVencimiento(dto.getFechaVencimiento());
+        bono.setFormaPago(dto.getFormaPago());
         bono.setEstado(dto.getEstado());
+        bono.setObservaciones(dto.getObservaciones());
 
         return mapToDTO(bonoRepository.save(bono));
     }
@@ -93,10 +100,13 @@ public class BonoServiceImpl implements BonoService{
         return Bono.builder()
                 .servicio(dto.getServicio())
                 .comprador(dto.getComprador())
+                .beneficiario(dto.getBeneficiario())
                 .precio(dto.getPrecio())
-                .fechaCompra(dto.getFechaCompra())
-                .fechaVencimiento(dto.getFechaVencimiento())
-                .estado(BonoEstado.ACTIVO)
+                .fechaCompra(resolveFechaCompra(dto))
+                .fechaVencimiento(resolveFechaVencimiento(dto))
+                .formaPago(dto.getFormaPago())
+                .estado(dto.getEstado() != null ? dto.getEstado() : BonoEstado.ACTIVO)
+                .observaciones(dto.getObservaciones())
                 .creator(user)
                 .build();
     }
@@ -106,13 +116,27 @@ public class BonoServiceImpl implements BonoService{
                 .id(bono.getId())
                 .servicio(bono.getServicio())
                 .comprador(bono.getComprador())
+                .beneficiario(bono.getBeneficiario())
                 .precio(bono.getPrecio())
                 .fechaCompra(bono.getFechaCompra())
                 .fechaVencimiento(bono.getFechaVencimiento())
+                .formaPago(bono.getFormaPago())
                 .estado(bono.getEstado())
+                .observaciones(bono.getObservaciones())
                 .creador(bono.getCreator().getUsername())
                 .build();
     }
+
+    private LocalDate resolveFechaCompra(BonoRequestDTO dto) {
+        return dto.getFechaCompra() != null ? dto.getFechaCompra() : LocalDate.now();
+    }
+
+    private LocalDate resolveFechaVencimiento(BonoRequestDTO dto) {
+        return dto.getFechaVencimiento() != null
+                ? dto.getFechaVencimiento()
+                : resolveFechaCompra(dto).plusMonths(6);
+    }
+
     private Bono getBonoEntity(Integer id) {
         return bonoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bono no encontrado"));

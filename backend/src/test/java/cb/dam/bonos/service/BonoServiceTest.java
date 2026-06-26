@@ -3,6 +3,7 @@ package cb.dam.bonos.service;
 import cb.dam.bonos.dto.BonoRequestDTO;
 import cb.dam.bonos.model.Bono;
 import cb.dam.bonos.model.BonoEstado;
+import cb.dam.bonos.model.FormaPago;
 import cb.dam.bonos.model.User;
 import cb.dam.bonos.repository.BonoRepository;
 import org.junit.jupiter.api.Test;
@@ -35,10 +36,13 @@ class BonoServiceImplTest {
         BonoRequestDTO dto = new BonoRequestDTO();
         dto.setServicio("Facial");
         dto.setComprador("Maria");
+        dto.setBeneficiario("Laura");
         dto.setPrecio(BigDecimal.valueOf(50));
         dto.setFechaCompra(LocalDate.now());
         dto.setFechaVencimiento(LocalDate.now().plusDays(30));
+        dto.setFormaPago(FormaPago.TARJETA);
         dto.setEstado(BonoEstado.ACTIVO);
+        dto.setObservaciones("Sin alergias declaradas");
         return dto;
     }
 
@@ -53,10 +57,13 @@ class BonoServiceImplTest {
                 .id(1)
                 .servicio("Facial")
                 .comprador("Maria")
+                .beneficiario("Laura")
                 .precio(BigDecimal.valueOf(50))
                 .fechaCompra(LocalDate.now())
                 .fechaVencimiento(LocalDate.now().plusDays(30))
+                .formaPago(FormaPago.TARJETA)
                 .estado(BonoEstado.ACTIVO)
+                .observaciones("Sin alergias declaradas")
                 .creator(user)
                 .build();
     }
@@ -73,6 +80,9 @@ class BonoServiceImplTest {
 
         assertNotNull(result);
         assertEquals("Facial", result.getServicio());
+        assertEquals("Laura", result.getBeneficiario());
+        assertEquals(FormaPago.TARJETA, result.getFormaPago());
+        assertEquals("Sin alergias declaradas", result.getObservaciones());
         assertEquals("admin", result.getCreador());
         verify(bonoRepository).save(any(Bono.class));
     }

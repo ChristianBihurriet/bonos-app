@@ -22,6 +22,8 @@ public class Bono extends BaseEntity {
 
     private String comprador;
 
+    private String beneficiario;
+
     private BigDecimal precio;
 
     private LocalDate fechaCompra;
@@ -29,7 +31,13 @@ public class Bono extends BaseEntity {
     private LocalDate fechaVencimiento;
 
     @Enumerated(EnumType.STRING)
+    private FormaPago formaPago;
+
+    @Enumerated(EnumType.STRING)
     private BonoEstado estado;
+
+    @Column(length = 1000)
+    private String observaciones;
 
     @ManyToOne
     @JoinColumn(name="created_by")

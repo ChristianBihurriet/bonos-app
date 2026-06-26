@@ -101,16 +101,19 @@ ACTIVO → VENCIDO (futuro: automático)
 * Uso de enum para consistencia
 
 ---
-## 📦 Ejemplo requet JSON
+## 📦 Ejemplo request JSON
 
 ```json
 {
   "servicio": "Radiofrecuencia",
   "comprador": "Maria",
+  "beneficiario": "Laura",
   "precio": 120.00,
   "fechaCompra": "2026-03-20",
-  "fechaVencimiento": "2026-06-20",
-  "estado": "ACTIVO"
+  "fechaVencimiento": "2026-09-20",
+  "formaPago": "TARJETA",
+  "estado": "ACTIVO",
+  "observaciones": "Primera sesión pendiente"
 }
 ```
 
@@ -118,12 +121,17 @@ ACTIVO → VENCIDO (futuro: automático)
 ## 📤 Ejemplo response
 ```json
 {
-"id": 1,
-"servicio": "Radiofrecuencia",
-"comprador": "Maria",
-"precio": 120,
-"estado": "ACTIVO",
-"creador": "christian"
+  "id": 1,
+  "servicio": "Radiofrecuencia",
+  "comprador": "Maria",
+  "beneficiario": "Laura",
+  "precio": 120,
+  "fechaCompra": "2026-03-20",
+  "fechaVencimiento": "2026-09-20",
+  "formaPago": "TARJETA",
+  "estado": "ACTIVO",
+  "observaciones": "Primera sesión pendiente",
+  "creador": "christian"
 }
 ```
 

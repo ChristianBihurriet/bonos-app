@@ -68,16 +68,20 @@ export function renderBonos(bonos) {
 </form>
         </div>
 
+        <div class="table-responsive">
         <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
               <th>ID</th>
-              <th>Servicio</th>
-              <th>Comprador</th>
               <th>Fecha compra</th>
               <th>Vencimiento</th>
-              <th>Estado</th>
+              <th>Servicio</th>
+              <th>Comprador</th>
+              <th>Beneficiario</th>
               <th>Precio</th>
+              <th>Forma pago</th>
+              <th>Estado</th>
+              <th>Observaciones</th>
               <th>Acción</th>
             </tr>
           </thead>
@@ -86,16 +90,19 @@ export function renderBonos(bonos) {
             ${bonos.map(b => `
               <tr>
                 <td>${b.id}</td>
-                <td>${b.servicio}</td>
-                <td>${b.comprador}</td>
                 <td>${b.fechaCompra}</td>
                 <td>${b.fechaVencimiento}</td>
+                <td>${b.servicio}</td>
+                <td>${b.comprador}</td>
+                <td>${b.beneficiario || ""}</td>
+                <td>${b.precio}</td>
+                <td>${formatEnum(b.formaPago)}</td>
                 <td>
                   <span class="badge ${getEstadoClass(b.estado)}">
                     ${b.estado}
                   </span>
                 </td>
-                <td>${b.precio}</td>
+                <td>${b.observaciones || ""}</td>
                 <td>
                   <select class="form-select form-select-sm accion-select" data-id="${b.id}">
                     <option value="">Acciones</option>
@@ -108,6 +115,7 @@ export function renderBonos(bonos) {
             `).join("")}
           </tbody>
         </table>
+        </div>
 
       </div>
     </div>
@@ -167,6 +175,11 @@ export function renderCrearBono() {
         </div>
 
         <div class="mb-3">
+          <label class="form-label">Beneficiario</label>
+          <input id="beneficiario" class="form-control" />
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Fecha de compra</label>
           <input id="fechaCompra" type="date" class="form-control" />
         </div>
@@ -174,6 +187,15 @@ export function renderCrearBono() {
         <div class="mb-3">
           <label class="form-label">Fecha de vencimiento</label>
           <input id="fechaVencimiento" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Forma de pago</label>
+          <select id="formaPago" class="form-select">
+            <option value="TARJETA">Tarjeta</option>
+            <option value="EFECTIVO">Efectivo</option>
+            <option value="BIZUM">Bizum</option>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -188,6 +210,11 @@ export function renderCrearBono() {
         <div class="mb-4">
           <label class="form-label">Monto (€)</label>
           <input id="precio" type="number" class="form-control" />
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Observaciones</label>
+          <textarea id="observaciones" class="form-control" rows="3"></textarea>
         </div>
 
         <div class="d-flex justify-content-end gap-2">
@@ -224,6 +251,11 @@ export async function renderEditarBono(id) {
       <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
 
         <div class="mb-3">
+          <label class="form-label">ID</label>
+          <input class="form-control" value="${bono.id}" readonly />
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Servicio</label>
           <input id="servicio" class="form-control" value="${bono.servicio}" />
         </div>
@@ -234,6 +266,11 @@ export async function renderEditarBono(id) {
         </div>
 
         <div class="mb-3">
+          <label class="form-label">Beneficiario</label>
+          <input id="beneficiario" class="form-control" value="${bono.beneficiario || ""}" />
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Fecha de compra</label>
           <input id="fechaCompra" type="date" class="form-control" value="${bono.fechaCompra?.split("T")[0]}" />
         </div>
@@ -241,6 +278,15 @@ export async function renderEditarBono(id) {
         <div class="mb-3">
           <label class="form-label">Fecha de vencimiento</label>
           <input id="fechaVencimiento" type="date" class="form-control" value="${bono.fechaVencimiento?.split("T")[0]}" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Forma de pago</label>
+          <select id="formaPago" class="form-select">
+            <option value="TARJETA" ${bono.formaPago === "TARJETA" ? "selected" : ""}>Tarjeta</option>
+            <option value="EFECTIVO" ${bono.formaPago === "EFECTIVO" ? "selected" : ""}>Efectivo</option>
+            <option value="BIZUM" ${bono.formaPago === "BIZUM" ? "selected" : ""}>Bizum</option>
+          </select>
         </div>
 
         <div class="mb-3">
@@ -255,6 +301,11 @@ export async function renderEditarBono(id) {
         <div class="mb-4">
           <label class="form-label">Monto (€)</label>
           <input id="precio" type="number" class="form-control" value="${bono.precio}" />
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Observaciones</label>
+          <textarea id="observaciones" class="form-control" rows="3">${bono.observaciones || ""}</textarea>
         </div>
 
         <div class="d-flex justify-content-end gap-2">
@@ -279,4 +330,9 @@ function getEstadoClass(estado) {
   if (estado === "ACTIVO") return "bg-success";
   if (estado === "USADO") return "bg-secondary";
   if (estado === "VENCIDO") return "bg-danger";
+}
+
+function formatEnum(value) {
+  if (!value) return "";
+  return value.charAt(0) + value.slice(1).toLowerCase();
 }

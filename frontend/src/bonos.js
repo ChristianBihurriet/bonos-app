@@ -9,12 +9,15 @@ export async function cargarBonos() {
 export async function crearBono() {
     const servicio = document.querySelector('#servicio').value;
     const comprador = document.querySelector('#comprador').value;
+    const beneficiario = document.querySelector('#beneficiario').value;
     const precio = document.querySelector('#precio').value;
     const fechaCompra = document.querySelector('#fechaCompra').value;
     const fechaVencimiento = document.querySelector('#fechaVencimiento').value;
+    const formaPago = document.querySelector('#formaPago').value;
     const estado = document.querySelector('#estado').value;
+    const observaciones = document.querySelector('#observaciones').value;
 
-    if (!servicio || !comprador || !precio || !fechaCompra || !fechaVencimiento || !estado) {
+    if (!servicio || !comprador || !beneficiario || !precio || !fechaCompra || !fechaVencimiento || !formaPago || !estado) {
         document.querySelector('#resultado').innerText = "Completa todos los campos";
         return;
     }
@@ -24,10 +27,13 @@ export async function crearBono() {
         body: JSON.stringify({
             servicio,
             comprador,
+            beneficiario,
             precio,
             fechaCompra,
             fechaVencimiento,
-            estado
+            formaPago,
+            estado,
+            observaciones
         })
     });
 
@@ -38,20 +44,26 @@ export async function crearBono() {
 export async function actualizarBono(id) {
     const servicio = document.querySelector('#servicio').value;
     const comprador = document.querySelector('#comprador').value;
+    const beneficiario = document.querySelector('#beneficiario').value;
     const precio = document.querySelector('#precio').value;
     const fechaCompra = document.querySelector('#fechaCompra').value;
     const fechaVencimiento = document.querySelector('#fechaVencimiento').value;
+    const formaPago = document.querySelector('#formaPago').value;
     const estado = document.querySelector('#estado').value;
+    const observaciones = document.querySelector('#observaciones').value;
 
     await fetchConAuth(`${API_URL}/bonos/${id}`, {
         method: "PUT",
         body: JSON.stringify({
             servicio,
             comprador,
+            beneficiario,
             precio,
             fechaCompra,
             fechaVencimiento,
-            estado
+            formaPago,
+            estado,
+            observaciones
         })
     });
 
