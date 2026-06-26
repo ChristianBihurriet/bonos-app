@@ -36,23 +36,23 @@ public class BonoController {
         return bonoService.obtenerBonos();
     }
 
-    @GetMapping("/{id}")
-    public BonoResponseDTO obtenerBono(@PathVariable Integer id) {
-        return bonoService.obtenerBonoPorId(id);
+    @GetMapping("/{numeroBono}")
+    public BonoResponseDTO obtenerBono(@PathVariable Integer numeroBono) {
+        return bonoService.obtenerBonoPorNumeroBono(numeroBono);
     }
 
-    @PutMapping("/{id}")
-    public BonoResponseDTO actualizarBono(@PathVariable Integer id, @RequestBody BonoRequestDTO dto) {
-        return bonoService.actualizarBono(id, dto);
+    @PutMapping("/{numeroBono}")
+    public BonoResponseDTO actualizarBono(@PathVariable Integer numeroBono, @RequestBody BonoRequestDTO dto) {
+        return bonoService.actualizarBono(numeroBono, dto);
     }
 
-    @DeleteMapping("/{id}")
-    public void eliminarBono(@PathVariable Integer id) {
-        bonoService.eliminarBono(id);
+    @DeleteMapping("/{numeroBono}")
+    public void eliminarBono(@PathVariable Integer numeroBono) {
+        bonoService.eliminarBono(numeroBono);
     }
 
-    @PatchMapping("/{id}/usar")
-    public BonoResponseDTO usarBono(@PathVariable Integer id) {
-        return bonoService.marcarComoUsado(id);
+    @PatchMapping("/{numeroBono}/usar")
+    public BonoResponseDTO usarBono(@PathVariable Integer numeroBono) {
+        return bonoService.marcarComoUsado(numeroBono);
     }
 }

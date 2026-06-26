@@ -75,10 +75,10 @@ POST /auth/login      → login (devuelve JWT)
 
 ```http
 GET    /bonos          → obtener todos
-GET    /bonos/{id}     → obtener uno
+GET    /bonos/{numeroBono} → obtener uno por código
 POST   /bonos          → crear
-PUT    /bonos/{id}     → actualizar
-DELETE /bonos/{id}     → eliminar
+PUT    /bonos/{numeroBono} → actualizar
+DELETE /bonos/{numeroBono} → eliminar
 ```
 
 ---
@@ -106,6 +106,7 @@ ACTIVO → VENCIDO (futuro: automático)
 ```json
 {
   "servicio": "Radiofrecuencia",
+  "numeroBono": 150,
   "comprador": "Maria",
   "beneficiario": "Laura",
   "precio": 120.00,
@@ -121,7 +122,7 @@ ACTIVO → VENCIDO (futuro: automático)
 ## 📤 Ejemplo response
 ```json
 {
-  "id": 1,
+  "numeroBono": 150,
   "servicio": "Radiofrecuencia",
   "comprador": "Maria",
   "beneficiario": "Laura",

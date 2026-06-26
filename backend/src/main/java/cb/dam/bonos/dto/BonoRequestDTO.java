@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @Data
 public class BonoRequestDTO {
 
+    private Integer numeroBono;
+
     private String servicio;
 
     private String comprador;

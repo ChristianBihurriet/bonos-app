@@ -6,7 +6,7 @@ import {
   actualizarBono,
   eliminarBono,
   marcarComoUsado,
-  buscarBonoPorId
+  buscarBonoPorNumero
 } from "./bonos.js";
 
 export function renderLogin() {
@@ -62,7 +62,7 @@ export function renderBonos(bonos) {
 
         <div class="mb-3">
           <form id="buscarForm" class="mb-3 d-flex gap-2">
-  <input id="buscarId" type="number" class="form-control w-25" placeholder="Buscar por ID..." />
+  <input id="buscarNumeroBono" type="number" class="form-control w-25" placeholder="Buscar por código..." />
   <button type="submit" class="btn btn-dark">Buscar</button>
   <button type="button" id="resetBtn" class="btn btn-outline-secondary">Reset</button>
 </form>
@@ -72,7 +72,7 @@ export function renderBonos(bonos) {
         <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
-              <th>ID</th>
+              <th>Código</th>
               <th>Fecha compra</th>
               <th>Vencimiento</th>
               <th>Servicio</th>
@@ -89,7 +89,7 @@ export function renderBonos(bonos) {
           <tbody>
             ${bonos.map(b => `
               <tr>
-                <td>${b.id}</td>
+                <td>${b.numeroBono}</td>
                 <td>${b.fechaCompra}</td>
                 <td>${b.fechaVencimiento}</td>
                 <td>${b.servicio}</td>
@@ -102,9 +102,9 @@ export function renderBonos(bonos) {
                     ${b.estado}
                   </span>
                 </td>
-                <td>${b.observaciones || ""}</td>
+                <td class="observaciones-cell">${renderObservaciones(b.observaciones)}</td>
                 <td>
-                  <select class="form-select form-select-sm accion-select" data-id="${b.id}">
+                  <select class="form-select form-select-sm accion-select" data-numero-bono="${b.numeroBono}">
                     <option value="">Acciones</option>
                     <option value="editar">Editar</option>
                     <option value="usar">Marcar usado</option>
@@ -127,12 +127,12 @@ export function renderBonos(bonos) {
 
   document.querySelectorAll('.accion-select').forEach(select => {
     select.addEventListener('change', async (e) => {
-      const id = e.target.dataset.id;
+      const numeroBono = e.target.dataset.numeroBono;
       const accion = e.target.value;
 
-      if (accion === "editar") renderEditarBono(id);
-      if (accion === "usar") await marcarComoUsado(id);
-      if (accion === "eliminar") await eliminarBono(id);
+      if (accion === "editar") renderEditarBono(numeroBono);
+      if (accion === "usar") await marcarComoUsado(numeroBono);
+      if (accion === "eliminar") await eliminarBono(numeroBono);
 
       e.target.value = "";
     });
@@ -141,16 +141,16 @@ export function renderBonos(bonos) {
   document.querySelector('#buscarForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const id = document.querySelector('#buscarId').value;
+    const numeroBono = document.querySelector('#buscarNumeroBono').value;
 
-    if (!id) return;
+    if (!numeroBono) return;
 
-    if (Number(id) <= 0) {
-      alert("El ID debe ser mayor que 0");
+    if (Number(numeroBono) <= 0) {
+      alert("El código debe ser mayor que 0");
       return;
     }
 
-    await buscarBonoPorId(id);
+    await buscarBonoPorNumero(numeroBono);
   });
 
   document.querySelector('#resetBtn').addEventListener('click', cargarBonos);
@@ -163,6 +163,18 @@ export function renderCrearBono() {
       <h3 class="text-center mb-4">Crear bono</h3>
 
       <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
+
+        <div class="mb-3">
+          <div class="form-check">
+            <input id="asignarNumeroManual" type="checkbox" class="form-check-input" />
+            <label class="form-check-label" for="asignarNumeroManual">Asignar número manualmente</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Código</label>
+          <input id="numeroBono" type="number" class="form-control" placeholder="Automático" disabled />
+        </div>
 
         <div class="mb-3">
           <label class="form-label">Servicio</label>
@@ -236,12 +248,18 @@ export function renderCrearBono() {
   vencimiento.setMonth(vencimiento.getMonth() + 6);
   document.querySelector('#fechaVencimiento').value = vencimiento.toISOString().split('T')[0];
 
+  document.querySelector('#asignarNumeroManual').addEventListener('change', (e) => {
+    const numeroBonoInput = document.querySelector('#numeroBono');
+    numeroBonoInput.disabled = !e.target.checked;
+    if (!e.target.checked) numeroBonoInput.value = "";
+  });
+
   document.querySelector('#guardarBtn').addEventListener('click', crearBono);
   document.querySelector('#volverBtn').addEventListener('click', cargarBonos);
 }
 
-export async function renderEditarBono(id) {
-  const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
+export async function renderEditarBono(numeroBono) {
+  const bono = await fetchConAuth(`${API_URL}/bonos/${numeroBono}`);
 
   document.querySelector('#app').innerHTML = `
     <div class="container mt-5">
@@ -251,8 +269,15 @@ export async function renderEditarBono(id) {
       <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
 
         <div class="mb-3">
-          <label class="form-label">ID</label>
-          <input class="form-control" value="${bono.id}" readonly />
+          <div class="form-check">
+            <input id="asignarNumeroManual" type="checkbox" class="form-check-input" />
+            <label class="form-check-label" for="asignarNumeroManual">Asignar número manualmente</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Código</label>
+          <input id="numeroBono" type="number" class="form-control" value="${bono.numeroBono}" disabled />
         </div>
 
         <div class="mb-3">
@@ -320,7 +345,11 @@ export async function renderEditarBono(id) {
   `;
 
   document.querySelector('#guardarBtn')
-    .addEventListener('click', () => actualizarBono(id));
+    .addEventListener('click', () => actualizarBono(numeroBono));
+
+  document.querySelector('#asignarNumeroManual').addEventListener('change', (e) => {
+    document.querySelector('#numeroBono').disabled = !e.target.checked;
+  });
 
   document.querySelector('#volverBtn')
     .addEventListener('click', cargarBonos);
@@ -335,4 +364,33 @@ function getEstadoClass(estado) {
 function formatEnum(value) {
   if (!value) return "";
   return value.charAt(0) + value.slice(1).toLowerCase();
+}
+
+function renderObservaciones(value) {
+  const observaciones = value?.trim();
+
+  if (!observaciones) {
+    return '<span class="text-muted">Sin observaciones</span>';
+  }
+
+  const text = escapeHtml(observaciones);
+  const preview = escapeHtml(truncateText(observaciones, 20));
+
+  return `
+    <span class="observaciones-preview" title="${text}">${preview}</span>
+  `;
+}
+
+function truncateText(value, maxLength) {
+  if (value.length <= maxLength) return value;
+  return `${value.slice(0, maxLength)}...`;
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }

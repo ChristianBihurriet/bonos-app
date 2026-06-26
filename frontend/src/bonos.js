@@ -7,6 +7,8 @@ export async function cargarBonos() {
 }
 
 export async function crearBono() {
+    const asignarNumeroManual = document.querySelector('#asignarNumeroManual').checked;
+    const numeroBono = document.querySelector('#numeroBono').value;
     const servicio = document.querySelector('#servicio').value;
     const comprador = document.querySelector('#comprador').value;
     const beneficiario = document.querySelector('#beneficiario').value;
@@ -22,26 +24,38 @@ export async function crearBono() {
         return;
     }
 
-    await fetchConAuth(`${API_URL}/bonos`, {
-        method: "POST",
-        body: JSON.stringify({
-            servicio,
-            comprador,
-            beneficiario,
-            precio,
-            fechaCompra,
-            fechaVencimiento,
-            formaPago,
-            estado,
-            observaciones
-        })
-    });
+    if (asignarNumeroManual && (!numeroBono || Number(numeroBono) <= 0)) {
+        document.querySelector('#resultado').innerText = "El código debe ser mayor que 0";
+        return;
+    }
 
-    cargarBonos();
+    try {
+        await fetchConAuth(`${API_URL}/bonos`, {
+            method: "POST",
+            body: JSON.stringify({
+                numeroBono: asignarNumeroManual ? Number(numeroBono) : null,
+                servicio,
+                comprador,
+                beneficiario,
+                precio,
+                fechaCompra,
+                fechaVencimiento,
+                formaPago,
+                estado,
+                observaciones
+            })
+        });
+
+        cargarBonos();
+    } catch (error) {
+        document.querySelector('#resultado').innerText = error.message;
+    }
 }
 
 
-export async function actualizarBono(id) {
+export async function actualizarBono(numeroBonoActual) {
+    const asignarNumeroManual = document.querySelector('#asignarNumeroManual').checked;
+    const numeroBono = document.querySelector('#numeroBono').value;
     const servicio = document.querySelector('#servicio').value;
     const comprador = document.querySelector('#comprador').value;
     const beneficiario = document.querySelector('#beneficiario').value;
@@ -52,50 +66,54 @@ export async function actualizarBono(id) {
     const estado = document.querySelector('#estado').value;
     const observaciones = document.querySelector('#observaciones').value;
 
-    await fetchConAuth(`${API_URL}/bonos/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-            servicio,
-            comprador,
-            beneficiario,
-            precio,
-            fechaCompra,
-            fechaVencimiento,
-            formaPago,
-            estado,
-            observaciones
-        })
-    });
+    if (asignarNumeroManual && (!numeroBono || Number(numeroBono) <= 0)) {
+        document.querySelector('#resultado').innerText = "El código debe ser mayor que 0";
+        return;
+    }
 
-    cargarBonos();
+    try {
+        await fetchConAuth(`${API_URL}/bonos/${numeroBonoActual}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                numeroBono: asignarNumeroManual ? Number(numeroBono) : null,
+                servicio,
+                comprador,
+                beneficiario,
+                precio,
+                fechaCompra,
+                fechaVencimiento,
+                formaPago,
+                estado,
+                observaciones
+            })
+        });
+
+        cargarBonos();
+    } catch (error) {
+        document.querySelector('#resultado').innerText = error.message;
+    }
 }
 
-function handleAccion(id, accion) {
-    if (accion === "eliminar") eliminarBono(id);
-    if (accion === "usar") marcarComoUsado(id);
-}
-
-export async function eliminarBono(id) {
-    await fetchConAuth(`${API_URL}/bonos/${id}`, {
+export async function eliminarBono(numeroBono) {
+    await fetchConAuth(`${API_URL}/bonos/${numeroBono}`, {
         method: "DELETE"
     });
 
     cargarBonos();
 }
 
-export async function marcarComoUsado(id) {
-    await fetchConAuth(`${API_URL}/bonos/${id}/usar`, {
+export async function marcarComoUsado(numeroBono) {
+    await fetchConAuth(`${API_URL}/bonos/${numeroBono}/usar`, {
         method: "PATCH"
     });
 
     cargarBonos();
 }
 
-export async function buscarBonoPorId(id) {
+export async function buscarBonoPorNumero(numeroBono) {
     try {
-        const bono = await fetchConAuth(`${API_URL}/bonos/${id}`);
+        const bono = await fetchConAuth(`${API_URL}/bonos/${numeroBono}`);
 
-        // renderizamos como lista de 1 elemento
         renderBonos([bono]);
 
     } catch (error) {

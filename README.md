@@ -140,10 +140,10 @@ El proyecto incluye un `data.sql` que carga automáticamente:
 | Método | Endpoint       | Descripción                     |
 |--------|---------------|---------------------------------|
 | GET    | /bonos        | Listar todos los bonos          |
-| GET    | /bonos/{id}   | Obtener detalle de un bono      |
+| GET    | /bonos/{numeroBono} | Obtener detalle de un bono por código |
 | POST   | /bonos        | Crear un nuevo bono             |
-| PUT    | /bonos/{id}   | Actualizar un bono              |
-| DELETE | /bonos/{id}   | Eliminar un bono                |
+| PUT    | /bonos/{numeroBono} | Actualizar un bono              |
+| DELETE | /bonos/{numeroBono} | Eliminar un bono                |
 
 ## 🔄 Flujo de funcionamiento
 

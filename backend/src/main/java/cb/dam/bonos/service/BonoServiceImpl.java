@@ -22,6 +22,7 @@ public class BonoServiceImpl implements BonoService{
     @Override
     public BonoResponseDTO crearBono(BonoRequestDTO dto, User user) {
         Bono bono = Bono.builder()
+                .numeroBono(resolveNumeroBonoParaCrear(dto))
                 .servicio(dto.getServicio())
                 .comprador(dto.getComprador())
                 .beneficiario(dto.getBeneficiario())
@@ -41,15 +42,15 @@ public class BonoServiceImpl implements BonoService{
     @Override
     public List<BonoResponseDTO> obtenerBonos() {
 
-        return bonoRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
+        return bonoRepository.findAll(Sort.by(Sort.Direction.ASC, "numeroBono"))
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
     }
 
     @Override
-    public BonoResponseDTO obtenerBonoPorId(Integer id) {
-        return mapToDTO(getBonoEntity(id));
+    public BonoResponseDTO obtenerBonoPorNumeroBono(Integer numeroBono) {
+        return mapToDTO(getBonoEntityByNumeroBono(numeroBono));
     }
 
     @Override
@@ -62,9 +63,10 @@ public class BonoServiceImpl implements BonoService{
     }
 
     @Override
-    public BonoResponseDTO actualizarBono(Integer id, BonoRequestDTO dto) {
-        Bono bono = getBonoEntity(id);
+    public BonoResponseDTO actualizarBono(Integer numeroBono, BonoRequestDTO dto) {
+        Bono bono = getBonoEntityByNumeroBono(numeroBono);
 
+        actualizarNumeroBonoSiCorresponde(bono, dto.getNumeroBono());
         bono.setServicio(dto.getServicio());
         bono.setComprador(dto.getComprador());
         bono.setBeneficiario(dto.getBeneficiario());
@@ -79,13 +81,13 @@ public class BonoServiceImpl implements BonoService{
     }
 
     @Override
-    public void eliminarBono(Integer id) {
-        bonoRepository.delete(getBonoEntity(id));
+    public void eliminarBono(Integer numeroBono) {
+        bonoRepository.delete(getBonoEntityByNumeroBono(numeroBono));
     }
 
-    public BonoResponseDTO marcarComoUsado(Integer id) {
+    public BonoResponseDTO marcarComoUsado(Integer numeroBono) {
 
-        Bono bono = getBonoEntity(id);
+        Bono bono = getBonoEntityByNumeroBono(numeroBono);
 
         if (bono.getEstado() != BonoEstado.ACTIVO) {
             throw new RuntimeException("El bono no se puede usar");
@@ -98,6 +100,7 @@ public class BonoServiceImpl implements BonoService{
 
     private Bono mapToEntity(BonoRequestDTO dto, User user) {
         return Bono.builder()
+                .numeroBono(resolveNumeroBonoParaCrear(dto))
                 .servicio(dto.getServicio())
                 .comprador(dto.getComprador())
                 .beneficiario(dto.getBeneficiario())
@@ -113,7 +116,7 @@ public class BonoServiceImpl implements BonoService{
 
     private BonoResponseDTO mapToDTO(Bono bono) {
         return BonoResponseDTO.builder()
-                .id(bono.getId())
+                .numeroBono(bono.getNumeroBono())
                 .servicio(bono.getServicio())
                 .comprador(bono.getComprador())
                 .beneficiario(bono.getBeneficiario())
@@ -127,6 +130,37 @@ public class BonoServiceImpl implements BonoService{
                 .build();
     }
 
+    private Integer resolveNumeroBonoParaCrear(BonoRequestDTO dto) {
+        if (dto.getNumeroBono() == null) {
+            return obtenerSiguienteNumeroBono();
+        }
+
+        validarNumeroBonoDisponible(dto.getNumeroBono());
+        return dto.getNumeroBono();
+    }
+
+    public Integer obtenerSiguienteNumeroBono() {
+        return bonoRepository.findMaxNumeroBono() + 1;
+    }
+
+    private void actualizarNumeroBonoSiCorresponde(Bono bono, Integer numeroBonoSolicitado) {
+        if (numeroBonoSolicitado == null || numeroBonoSolicitado.equals(bono.getNumeroBono())) {
+            return;
+        }
+
+        if (bonoRepository.existsByNumeroBonoAndIdNot(numeroBonoSolicitado, bono.getId())) {
+            throw new RuntimeException("Ya existe un bono con el código " + numeroBonoSolicitado);
+        }
+
+        bono.setNumeroBono(numeroBonoSolicitado);
+    }
+
+    private void validarNumeroBonoDisponible(Integer numeroBono) {
+        if (bonoRepository.existsByNumeroBono(numeroBono)) {
+            throw new RuntimeException("Ya existe un bono con el código " + numeroBono);
+        }
+    }
+
     private LocalDate resolveFechaCompra(BonoRequestDTO dto) {
         return dto.getFechaCompra() != null ? dto.getFechaCompra() : LocalDate.now();
     }
@@ -137,8 +171,8 @@ public class BonoServiceImpl implements BonoService{
                 : resolveFechaCompra(dto).plusMonths(6);
     }
 
-    private Bono getBonoEntity(Integer id) {
-        return bonoRepository.findById(id)
+    private Bono getBonoEntityByNumeroBono(Integer numeroBono) {
+        return bonoRepository.findByNumeroBono(numeroBono)
                 .orElseThrow(() -> new RuntimeException("Bono no encontrado"));
     }
 }

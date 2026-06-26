@@ -16,11 +16,11 @@ public interface BonoService {
 
     List<BonoResponseDTO> obtenerBonos();
 
-    BonoResponseDTO obtenerBonoPorId(Integer id);
+    BonoResponseDTO obtenerBonoPorNumeroBono(Integer numeroBono);
 
-    BonoResponseDTO actualizarBono(Integer id, BonoRequestDTO dto);
+    BonoResponseDTO actualizarBono(Integer numeroBono, BonoRequestDTO dto);
 
-    void eliminarBono(Integer id);
+    void eliminarBono(Integer numeroBono);
 
     List<BonoResponseDTO> obtenerBonosPorUsuario(User user);
 }

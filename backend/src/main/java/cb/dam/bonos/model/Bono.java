@@ -18,6 +18,9 @@ public class Bono extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
+    private Integer numeroBono;
+
     private String servicio;
 
     private String comprador;

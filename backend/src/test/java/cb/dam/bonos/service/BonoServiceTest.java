@@ -55,6 +55,7 @@ class BonoServiceImplTest {
     private Bono crearBono(User user) {
         return Bono.builder()
                 .id(1)
+                .numeroBono(10)
                 .servicio("Facial")
                 .comprador("Maria")
                 .beneficiario("Laura")
@@ -74,11 +75,13 @@ class BonoServiceImplTest {
         BonoRequestDTO dto = crearDTO();
         Bono bono = crearBono(user);
 
+        when(bonoRepository.findMaxNumeroBono()).thenReturn(9);
         when(bonoRepository.save(any(Bono.class))).thenReturn(bono);
 
         var result = bonoService.crearBono(dto, user);
 
         assertNotNull(result);
+        assertEquals(10, result.getNumeroBono());
         assertEquals("Facial", result.getServicio());
         assertEquals("Laura", result.getBeneficiario());
         assertEquals(FormaPago.TARJETA, result.getFormaPago());
@@ -88,31 +91,63 @@ class BonoServiceImplTest {
     }
 
     @Test
+    void deberiaCrearBonoConNumeroManual() {
+        User user = crearUser();
+        BonoRequestDTO dto = crearDTO();
+        dto.setNumeroBono(150);
+        Bono bono = crearBono(user);
+        bono.setNumeroBono(150);
+
+        when(bonoRepository.existsByNumeroBono(150)).thenReturn(false);
+        when(bonoRepository.save(any(Bono.class))).thenReturn(bono);
+
+        var result = bonoService.crearBono(dto, user);
+
+        assertEquals(150, result.getNumeroBono());
+        verify(bonoRepository).existsByNumeroBono(150);
+        verify(bonoRepository, never()).findMaxNumeroBono();
+    }
+
+    @Test
+    void noDeberiaCrearBonoConNumeroManualDuplicado() {
+        User user = crearUser();
+        BonoRequestDTO dto = crearDTO();
+        dto.setNumeroBono(150);
+
+        when(bonoRepository.existsByNumeroBono(150)).thenReturn(true);
+
+        RuntimeException error = assertThrows(RuntimeException.class, () -> bonoService.crearBono(dto, user));
+
+        assertEquals("Ya existe un bono con el código 150", error.getMessage());
+        verify(bonoRepository, never()).save(any(Bono.class));
+    }
+
+    @Test
     void deberiaObtenerTodosLosBonos() {
         User user = crearUser();
         Bono bono = crearBono(user);
 
-        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        when(bonoRepository.findAll(sortById)).thenReturn(List.of(bono));
+        Sort sortByNumeroBono = Sort.by(Sort.Direction.ASC, "numeroBono");
+        when(bonoRepository.findAll(sortByNumeroBono)).thenReturn(List.of(bono));
 
         var result = bonoService.obtenerBonos();
 
         assertEquals(1, result.size());
         assertEquals("Facial", result.get(0).getServicio());
-        verify(bonoRepository).findAll(sortById);
+        verify(bonoRepository).findAll(sortByNumeroBono);
     }
 
     @Test
-    void deberiaObtenerBonoPorId() {
+    void deberiaObtenerBonoPorNumeroBono() {
         User user = crearUser();
         Bono bono = crearBono(user);
 
-        when(bonoRepository.findById(1)).thenReturn(Optional.of(bono));
+        when(bonoRepository.findByNumeroBono(10)).thenReturn(Optional.of(bono));
 
-        var result = bonoService.obtenerBonoPorId(1);
+        var result = bonoService.obtenerBonoPorNumeroBono(10);
 
         assertEquals("Facial", result.getServicio());
-        verify(bonoRepository).findById(1);
+        verify(bonoRepository).findByNumeroBono(10);
     }
 
     @Test
@@ -120,9 +155,9 @@ class BonoServiceImplTest {
         User user = crearUser();
         Bono bono = crearBono(user);
 
-        when(bonoRepository.findById(1)).thenReturn(Optional.of(bono));
+        when(bonoRepository.findByNumeroBono(10)).thenReturn(Optional.of(bono));
 
-        bonoService.eliminarBono(1);
+        bonoService.eliminarBono(10);
 
         verify(bonoRepository).delete(bono);
     }
@@ -132,10 +167,10 @@ class BonoServiceImplTest {
         User user = crearUser();
         Bono bono = crearBono(user);
 
-        when(bonoRepository.findById(1)).thenReturn(Optional.of(bono));
+        when(bonoRepository.findByNumeroBono(10)).thenReturn(Optional.of(bono));
         when(bonoRepository.save(any(Bono.class))).thenReturn(bono);
 
-        var result = bonoService.marcarComoUsado(1);
+        var result = bonoService.marcarComoUsado(10);
 
         assertEquals(BonoEstado.USADO, result.getEstado());
         verify(bonoRepository).save(bono);

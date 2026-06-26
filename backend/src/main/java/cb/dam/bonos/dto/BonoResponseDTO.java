@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class BonoResponseDTO {
 
-    private Integer id;
+    private Integer numeroBono;
     private String servicio;
     private String comprador;
     private String beneficiario;

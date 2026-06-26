@@ -23,7 +23,18 @@ export async function fetchConAuth(url, options = {}) {
     }
 
     if (!response.ok) {
-        throw new Error("Error en request");
+        const text = await response.text();
+        let message = "Error en request";
+
+        if (text) {
+            try {
+                message = JSON.parse(text).message || message;
+            } catch {
+                message = text;
+            }
+        }
+
+        throw new Error(message);
     }
 
     // 🔥 CLAVE: leer como texto primero
